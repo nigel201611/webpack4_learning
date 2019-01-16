@@ -3,6 +3,8 @@
 // import { cube } from './math.js';
 // import Promise from 'promise-polyfill';
 
+import './style.css';
+
 // 处理低版本浏览器不支持promise
 import Promise from 'promise-polyfill';
 import setAsap from 'setasap';

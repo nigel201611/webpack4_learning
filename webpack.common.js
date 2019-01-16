@@ -2,7 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
+// 放弃使用extract-text-webpack-plugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 每次修改css，之更改對於css文件hash
+const WebpackMd5Hash = require('webpack-md5-hash');
+// const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: {
@@ -24,7 +28,11 @@ module.exports = {
         //至少一处用到 _ 变量的模块实例，那请你将 lodash package 包引入进来，并将其提供给需要用到它的模块。
         new webpack.ProvidePlugin({
             _: 'lodash'
-        })
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].[chunkhash:8].css",
+        }),
+        new WebpackMd5Hash()
     ],
     optimization: {
         splitChunks: {
@@ -47,6 +55,7 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader'
                 ]
             },
