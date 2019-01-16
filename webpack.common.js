@@ -4,13 +4,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // 放弃使用extract-text-webpack-plugin
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// 每次修改css，之更改對於css文件hash
+// 每次修改css，只更改對於css文件hash
 const WebpackMd5Hash = require('webpack-md5-hash');
 // const nodeExternals = require('webpack-node-externals');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
     entry: {
         app: './src/app.js',
+        // polyfills: './src/polyfills.js',
         another: './src/another-module.js'
     },
     output: {
@@ -32,7 +34,13 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "[name].[chunkhash:8].css",
         }),
-        new WebpackMd5Hash()
+        new WebpackMd5Hash(),
+        new WorkboxPlugin.GenerateSW({
+            // 这些选项帮助 ServiceWorkers 快速启用
+            // 不允许遗留任何“旧的” ServiceWorkers
+            clientsClaim: true,
+            skipWaiting: true
+        })
     ],
     optimization: {
         splitChunks: {

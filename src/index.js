@@ -2,7 +2,7 @@
 // import printMe from './print.js'
 // import { cube } from './math.js';
 // import Promise from 'promise-polyfill';
-
+import 'babel-polyfill';
 import './style.css';
 
 // 处理低版本浏览器不支持promise
@@ -58,14 +58,10 @@ function getComponent() {
         (require) => {
             let print = require('./print').default;
             print();
-        }, 
+        },
         'print'
     )
-
-
-
     // button.onclick = printMe;
-
     return element;
 }
 
@@ -84,4 +80,14 @@ if (module.hot) {
         // element = component(); // 重新渲染页面后，component 更新 click 事件处理
         // document.body.appendChild(element);
     })
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registered: ', registration);
+        }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+        });
+    });
 }
